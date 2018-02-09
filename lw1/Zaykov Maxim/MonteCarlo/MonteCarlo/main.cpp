@@ -1,6 +1,3 @@
-// MonteCarlo.cpp: определяет точку входа для консольного приложения.
-//
-
 #include "stdafx.h"
 #include "MonteCarloPiGenerator.h"
 
@@ -8,23 +5,20 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	if (argc < 3)
-	{
-		cout << "Usage: lw1pp.exe <num of threads> <num of iterations>" << endl;
-		return 1;
-	}
 	try
 	{
+		if (argc != 3)
+		{
+			throw logic_error("Usage: MonteCarlo.exe <num of threads> <num of iterations>");
+		}
 		int numOfThreads = stoi(argv[1]);
 		int numOfIterations = stoi(argv[2]);
-
-		MonteCarloPiGenerator generator(numOfIterations);
-
+		MonteCarloPiGenerator generator(numOfIterations, numOfThreads);
 		cout << generator.getPi() << endl;
 	}
-	catch (const std::exception&)
+	catch (const std::exception& ex)
 	{
-		cout << "Unable parse args" << endl;
+		cout << ex.what() << endl;
 	}
 
 	return 0;

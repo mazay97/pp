@@ -1,35 +1,58 @@
 #include "stdafx.h"
 #include "MonteCarloPiGenerator.h"
 
-
-MonteCarloPiGenerator::MonteCarloPiGenerator(int numOfIterations)
+MonteCarloPiGenerator::MonteCarloPiGenerator(const int numOfIterations, const int numOfThreads)
 {
 	iterationsNumber = numOfIterations;
+	threadsNumber = numOfThreads;
 }
 
-double MonteCarloPiGenerator::getPi()
+bool MonteCarloPiGenerator::isDotInCircle(const double & x, const double & y)
 {
-	countPI();
-	return 4 * numOfInsideDots / iterationsNumber;
+	return x * x + y * y <= 1;
 }
 
-void MonteCarloPiGenerator::countPI()
+DWORD WINAPI MonteCarloPiGenerator::countPI(LPVOID lpParameter)
 {
+	ThreadData * data = ((ThreadData*)lpParameter);
 	RandomGenerator generator;
 	double x, y;
-	for (counter; counter <= iterationsNumber; counter++)
+
+	for (size_t i = 0; i < data->iterationsNumber; ++i)
 	{
 		x = generator.getRandomDouble(-1, 1);
 		y = generator.getRandomDouble(-1, 1);
 
+		if (data->iterationsNumber <= data->countIterations)
+		{
+			break;
+		}
+
 		if (isDotInCircle(x, y))
 		{
-			numOfInsideDots++;
+			InterlockedIncrement(&data->countPointsInCircle);
 		}
+		InterlockedIncrement(&data->countIterations);
 	}
+	return 0;
 }
 
-bool MonteCarloPiGenerator::isDotInCircle(double x, double y)
+double MonteCarloPiGenerator::getPi()
 {
-	return x*x + y*y <= 1;
+	std::vector<HANDLE> threads;
+	ThreadData data(0, 0, iterationsNumber);
+
+	for (size_t i = 0; i < threadsNumber; ++i)
+	{
+		threads.push_back(CreateThread(NULL, 0, countPI, &data, 0, 0));
+	}
+
+	WaitForMultipleObjects(threads.size(), threads.data(), true, INFINITE);
+
+	for (auto &thread : threads)
+	{
+		CloseHandle(thread);
+	}
+
+	return 4 * double(data.countPointsInCircle) / double(iterationsNumber);
 }

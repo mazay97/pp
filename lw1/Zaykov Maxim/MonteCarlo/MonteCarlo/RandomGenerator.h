@@ -2,6 +2,6 @@
 class RandomGenerator
 {
 public:
-	double getRandomDouble(double fMin, double fMax);
+	double getRandomDouble(const double & min, const double & max);
 };
 
