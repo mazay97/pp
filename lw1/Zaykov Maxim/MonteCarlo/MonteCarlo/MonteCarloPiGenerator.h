@@ -19,11 +19,18 @@ class MonteCarloPiGenerator
 private:
 	int iterationsNumber = 0;
 	int threadsNumber = 0;
-	int pointsInside = 0;
 
 	static bool isDotInCircle(const double & x, const double & y);
 
+	double multithreadedCalculation();
+	double singlethreadedCalculation();
+
 public:
+	enum WorkingType
+	{
+		SINGLETHREAD,
+		MULTITHREAD
+	} type;
 
 	MonteCarloPiGenerator(int numOfIterations, const int numOfThreads);
 

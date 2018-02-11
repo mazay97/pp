@@ -5,11 +5,48 @@ MonteCarloPiGenerator::MonteCarloPiGenerator(const int numOfIterations, const in
 {
 	iterationsNumber = numOfIterations;
 	threadsNumber = numOfThreads;
+	if (threadsNumber == 1)
+	{
+		type = SINGLETHREAD;
+	}
+	else
+	{
+		type = MULTITHREAD;
+	}
 }
 
 bool MonteCarloPiGenerator::isDotInCircle(const double & x, const double & y)
 {
 	return x * x + y * y <= 1;
+}
+
+double MonteCarloPiGenerator::multithreadedCalculation()
+{
+	std::vector<HANDLE> threads;
+	ThreadData data(0, 0, iterationsNumber);
+
+	for (size_t i = 0; i < threadsNumber; ++i)
+	{
+		threads.push_back(CreateThread(NULL, 0, countPI, &data, 0, 0));
+	}
+
+	WaitForMultipleObjects(threads.size(), threads.data(), true, INFINITE);
+
+	for (auto &thread : threads)
+	{
+		CloseHandle(thread);
+	}
+
+	return 4 * double(data.countPointsInCircle) / double(iterationsNumber);
+}
+
+double MonteCarloPiGenerator::singlethreadedCalculation()
+{
+	ThreadData data(0, 0, iterationsNumber);
+
+	countPI(&data);
+
+	return 4 * double(data.countPointsInCircle) / double(iterationsNumber);
 }
 
 DWORD WINAPI MonteCarloPiGenerator::countPI(LPVOID lpParameter)
@@ -39,20 +76,12 @@ DWORD WINAPI MonteCarloPiGenerator::countPI(LPVOID lpParameter)
 
 double MonteCarloPiGenerator::getPi()
 {
-	std::vector<HANDLE> threads;
-	ThreadData data(0, 0, iterationsNumber);
-
-	for (size_t i = 0; i < threadsNumber; ++i)
+	if (type == SINGLETHREAD)
 	{
-		threads.push_back(CreateThread(NULL, 0, countPI, &data, 0, 0));
+		return singlethreadedCalculation();
 	}
-
-	WaitForMultipleObjects(threads.size(), threads.data(), true, INFINITE);
-
-	for (auto &thread : threads)
+	else
 	{
-		CloseHandle(thread);
+		return multithreadedCalculation();
 	}
-
-	return 4 * double(data.countPointsInCircle) / double(iterationsNumber);
 }
