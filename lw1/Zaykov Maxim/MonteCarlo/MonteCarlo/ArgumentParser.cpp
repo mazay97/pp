@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "ArgumentParser.h"
 
-
-
 bool ArgumentParser::parse(int argc, char* argv[])
 {
 	switch (argc)
@@ -27,12 +25,12 @@ bool ArgumentParser::parse(int argc, char* argv[])
 	}
 }
 
-int ArgumentParser::getThreads()
+int ArgumentParser::getThreads() const
 {
 	return threads;
 }
 
-int ArgumentParser::getIterations()
+int ArgumentParser::getIterations() const
 {
 	return iterations;
 }

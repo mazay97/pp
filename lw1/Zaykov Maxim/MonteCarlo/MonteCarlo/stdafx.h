@@ -6,10 +6,10 @@
 #include <tchar.h>
 #include <iostream>
 #include <cstdlib>      
-#include <ctime>        
-#include <cmath>        
+#include <ctime>              
 #include <thread>
 #include <vector>
 #include <algorithm>
 #include <string>
 #include <windows.h>
+#include <random>

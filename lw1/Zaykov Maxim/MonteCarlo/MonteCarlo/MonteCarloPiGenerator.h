@@ -4,26 +4,26 @@
 
 struct ThreadData
 {
-	ThreadData(const size_t & iterations, const size_t & points, const size_t & iterationsNum) :
+	ThreadData(const size_t & iterations, const size_t & points) :
 		countIterations(iterations), 
-		countPointsInCircle(points),
-		iterationsNumber(iterationsNum)
+		countPointsInCircle(points)
 	{};
 	size_t countPointsInCircle;
 	size_t countIterations;
-	const size_t iterationsNumber;
 };
 
 class MonteCarloPiGenerator
 {
 private:
-	int iterationsNumber = 0;
-	int threadsNumber = 0;
+	size_t iterationsNumber = 0;
+	size_t threadsNumber = 0;
 
 	static bool isDotInCircle(const double & x, const double & y);
 
 	double multithreadedCalculation();
 	double singlethreadedCalculation();
+	std::vector<ThreadData> divideIterationsOnThreads();
+	int pointsInCircle;
 
 public:
 	enum WorkingType
@@ -32,7 +32,7 @@ public:
 		MULTITHREAD
 	} type;
 
-	MonteCarloPiGenerator(int numOfIterations, const int numOfThreads);
+	MonteCarloPiGenerator(const int & numOfIterations, const int & numOfThreads);
 
 	static DWORD WINAPI countPI(LPVOID lpParameter);
 
