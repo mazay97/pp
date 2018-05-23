@@ -10,7 +10,7 @@ using namespace CellInfo;
 class CState
 {
 public:
-	CState(const Territory & territory, const long & shellsCost) : m_territory(territory), m_shellsCost(shellsCost)
+	CState(const Territory & territory, const long & shellsCost) : m_territory(territory), SHELL_COST(shellsCost)
 	{}
 
 	bool Shoot(CState & state)
@@ -32,11 +32,6 @@ public:
 		{
 			return false;
 		}
-	}
-
-	void SetShellCost(const long & shellCost)
-	{
-		SHELL_COST = shellCost;
 	}
 
 	bool CanShoot(const long & enemyStateCost, const long & m_shellsCost)
@@ -72,7 +67,7 @@ public:
 	}
 
 private:
-	long SHELL_COST = 0;
+	const long SHELL_COST;
 	long m_shellsCost = 0;
 	Territory m_territory;
 };

@@ -31,7 +31,7 @@ int main()
 	conflictData.m_conflict = &conflict;
 
 	ThreadHandler handler;
-	handler.AddThreads((LPTHREAD_START_ROUTINE)makeShoot, (LPVOID)&conflictData, 5);
+	handler.AddThreads((LPTHREAD_START_ROUTINE)makeShoot, (LPVOID)&conflictData, NUM_OF_THREADS);
 	handler.RunThreads();
 	handler.CloseThreads();
 
