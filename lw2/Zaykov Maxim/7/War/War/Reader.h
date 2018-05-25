@@ -6,6 +6,8 @@
 using namespace std;
 using namespace CellInfo;
 
+const int shift = 48;
+
 class Reader
 {
 public:
@@ -37,7 +39,7 @@ public:
 			char currentSymbol;
 			while (stream >> currentSymbol)
 			{
-				int convertedChar = (int)currentSymbol - 48;
+				int convertedChar = (int)currentSymbol - shift;
 				switch (convertedChar)
 				{
 				case 0:
